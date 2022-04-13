@@ -10,7 +10,7 @@ You don't need a server to use this rat but a telegram bot.
 1) Create Telegram bot and save the token
 2) Put your telegram bot token to the bee.go file. (Line 191)
 3) Set your password in Line 192. (You'll use it to login telegram bot panel.)
-4) Build the bee.go and run:
+4) Build the bee.go:
 
 For Windows:
 `
