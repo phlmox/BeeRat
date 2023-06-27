@@ -1,7 +1,9 @@
-# GoRat
+# BeeRat
 Remote administration tool for Windows.
 
 ![screenshot](img.JPG)
+
+# FOR EDUCATIONAL PURPOSES ONLY!
 
 You don't need a server to use this rat but a telegram bot.
 
